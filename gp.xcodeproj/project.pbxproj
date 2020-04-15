@@ -15,6 +15,8 @@
 		046CC2DF2441FFAA007010D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 046CC2DD2441FFAA007010D6 /* Main.storyboard */; };
 		046CC2E12441FFAB007010D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 046CC2E02441FFAB007010D6 /* Assets.xcassets */; };
 		046CC2E42441FFAB007010D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 046CC2E22441FFAB007010D6 /* LaunchScreen.storyboard */; };
+		046EFB3424473FB40022DA7B /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046EFB3324473FB40022DA7B /* Util.swift */; };
+		046EFB36244740ED0022DA7B /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046EFB35244740ED0022DA7B /* Circle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		046CC2E02441FFAB007010D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		046CC2E32441FFAB007010D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		046CC2E52441FFAB007010D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		046EFB3324473FB40022DA7B /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		046EFB35244740ED0022DA7B /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +73,8 @@
 				046CC2E02441FFAB007010D6 /* Assets.xcassets */,
 				046CC2E22441FFAB007010D6 /* LaunchScreen.storyboard */,
 				046CC2E52441FFAB007010D6 /* Info.plist */,
+				046EFB3324473FB40022DA7B /* Util.swift */,
+				046EFB35244740ED0022DA7B /* Circle.swift */,
 			);
 			path = gp;
 			sourceTree = "<group>";
@@ -148,7 +154,9 @@
 			files = (
 				046CC2DA2441FFAA007010D6 /* GameScene.swift in Sources */,
 				046CC2DC2441FFAA007010D6 /* GameViewController.swift in Sources */,
+				046EFB3424473FB40022DA7B /* Util.swift in Sources */,
 				046CC2D42441FFAA007010D6 /* AppDelegate.swift in Sources */,
+				046EFB36244740ED0022DA7B /* Circle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
