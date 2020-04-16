@@ -50,7 +50,7 @@ class GameScene: SKScene {
 
         scoreLabel = SKLabelNode(text: "Score: 0")
         scoreLabel.position = CGPoint(x: 0, y: 150)
-        scoreLabel.fontName = "AmericanTypewriter-Bold"
+        scoreLabel.fontName = "HelveticaNeue-Bold"
         scoreLabel.fontSize = 36
         scoreLabel.fontColor = UIColor.white
         score = 0
@@ -84,8 +84,7 @@ class GameScene: SKScene {
             let loc = t.location(in: self)
             let nodesArray = self.nodes(at: loc)
             for node in nodesArray {
-                if let circle = node as? SKShapeNode {
-                    let nodeName = circle.name!
+                if let circle = node as? SKShapeNode, let nodeName = circle.name {
                     let name = nodeName.components(separatedBy: "|")
                     let type = name[0]
                     let uuid = name[1]
@@ -94,13 +93,13 @@ class GameScene: SKScene {
                         let diff = circle.calculateAccumulatedFrame().width - nodeDict[uuid]!
                         if type == "stroke" {
                             if diff < 10 {
-                                addScore(300)
+                                Util.addScore(scene: self, position: circle.position, score: "300")
                             } else if diff < 30 {
-                                addScore(100)
+                                Util.addScore(scene: self, position: circle.position, score: "100")
                             } else if diff < 50 {
-                                addScore(50)
+                                Util.addScore(scene: self, position: circle.position, score: "50")
                             } else {
-                                print("too early")
+                                Util.addScore(scene: self, position: circle.position, score: "Miss")
                             }
                             for c in self.children {
                                 if let nodeName = c.name, nodeName.hasSuffix(uuid) {
@@ -110,11 +109,11 @@ class GameScene: SKScene {
                         }
                         if type == "startStroke" {
                             if diff < 10 {
-                                addScore(300)
+                                Util.addScore(scene: self, position: circle.position, score: "300")
                             } else if diff < 30 {
-                                addScore(100)
+                                Util.addScore(scene: self, position: circle.position, score: "100")
                             } else if diff < 50 {
-                                addScore(50)
+                                Util.addScore(scene: self, position: circle.position, score: "50")
                             }
                         }
                     } else {
@@ -133,11 +132,11 @@ class GameScene: SKScene {
             let nodesArray = self.nodes(at: loc)
             for node in nodesArray {
                 if let circle = node as? SKShapeNode {
-                    let nodeName = circle.name!
-                    let name = nodeName.components(separatedBy: "|")
-                    let type = name[0]
-                    if type == "move" {
-                        addScore(5)
+                    if let nodeName = circle.name {
+                        let name = nodeName.components(separatedBy: "|")
+                        if name[0] == "move" {
+                            addScore(5)
+                        }
                     }
                 }
             }

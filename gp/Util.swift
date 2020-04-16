@@ -10,6 +10,39 @@ import SpriteKit
 
 class Util {
     
+    class func addScore(scene: SKScene, position: CGPoint, score: String) {
+        var color:SKColor
+        switch score {
+        case "300":
+            color = SKColor(red:255/255, green:128/255, blue:0/255, alpha: 0.8)
+        case "100":
+            color = SKColor(red:0/255, green:204/255, blue:0/255, alpha: 0.8)
+        case "50":
+            color = SKColor(red:204/255, green:0/255, blue:204/255, alpha: 0.8)
+        default:
+            color = SKColor(red:128/255, green:128/255, blue:128/255, alpha: 0.8)
+        }
+        
+        let mark:SKShapeNode = SKShapeNode.init(circleOfRadius: CGFloat(45))
+        mark.position = position
+        mark.lineWidth = CGFloat(5)
+        mark.fillColor = color
+        mark.zPosition = 4
+        let scaleAction = SKAction.scale(by: CGFloat(1.4), duration: 0.4)
+        let fadeAction = SKAction.fadeOut(withDuration: 0.4)
+        mark.run(SKAction.sequence([SKAction.group([scaleAction, fadeAction]), SKAction.removeFromParent()]))
+        scene.addChild(mark)
+        
+        let scoreLabel = SKLabelNode(text: score)
+        scoreLabel.position = CGPoint(x: position.x, y: position.y - 16)
+        scoreLabel.fontName = "HelveticaNeue"
+        scoreLabel.fontSize = 34
+        scoreLabel.zPosition = 5
+        scoreLabel.fontColor = UIColor.white
+        scoreLabel.run(SKAction.sequence([SKAction.group([scaleAction, fadeAction]), SKAction.removeFromParent()]))
+        scene.addChild(scoreLabel)
+    }
+    
     class func addCircle(scene: SKScene, position: CGPoint, type: Circle){
         // stroke part
         var scaleDuration:TimeInterval
@@ -46,7 +79,10 @@ class Util {
                 shape.lineWidth = initialLineWidth + progress * (finalLineWidth - initialLineWidth)
             }
         }
-        let group = SKAction.sequence([SKAction.group([scaleAction, lineWidthAction]), SKAction.removeFromParent()])
+        let missAction = SKAction.run({
+            addScore(scene: scene, position: position, score: "Miss")
+        })
+        let group = SKAction.sequence([SKAction.group([scaleAction, lineWidthAction]), SKAction.removeFromParent(), missAction])
         stroke.run(group)
         scene.addChild(stroke)
         
