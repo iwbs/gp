@@ -10,7 +10,7 @@ import SpriteKit
 
 class Util {
     
-    class func addScore(scene: SKScene, position: CGPoint, score: String) {
+    class func addScoreNode(scene: SKScene, position: CGPoint, score: String) {
         var color:SKColor
         switch score {
         case "300":
@@ -79,10 +79,7 @@ class Util {
                 shape.lineWidth = initialLineWidth + progress * (finalLineWidth - initialLineWidth)
             }
         }
-        let missAction = SKAction.run({
-            addScore(scene: scene, position: position, score: "Miss")
-        })
-        let group = SKAction.sequence([SKAction.group([scaleAction, lineWidthAction]), SKAction.removeFromParent(), missAction])
+        let group = SKAction.sequence([SKAction.group([scaleAction, lineWidthAction]), SKAction.removeFromParent()])
         stroke.run(group)
         scene.addChild(stroke)
         
@@ -94,7 +91,10 @@ class Util {
         fill.lineWidth = CGFloat(5)
         fill.fillColor = strokeColor
         fill.zPosition = 2
-        fill.run(SKAction.sequence([SKAction.wait(forDuration: scaleDuration), SKAction.removeFromParent()]))
+        let missAction = SKAction.run({
+            addScoreNode(scene: scene, position: position, score: "Miss")
+        })
+        fill.run(SKAction.sequence([SKAction.wait(forDuration: scaleDuration), SKAction.removeFromParent(), missAction]))
         scene.addChild(fill)
         
     }
@@ -173,7 +173,10 @@ class Util {
         end.lineWidth = CGFloat(5)
         end.fillColor = color
         end.zPosition = 3
-        end.run(SKAction.sequence([SKAction.wait(forDuration: scaleDuration+duration), SKAction.removeFromParent()]))
+        let missAction = SKAction.run({
+            addScoreNode(scene: scene, position: endPoint, score: "Miss")
+        })
+        end.run(SKAction.sequence([SKAction.wait(forDuration: scaleDuration+duration), SKAction.removeFromParent(), missAction]))
         scene.addChild(end)
         
         // move part
@@ -186,4 +189,7 @@ class Util {
         scene.addChild(move)
     }
     
+    class func getDistance(point1:CGPoint, point2:CGPoint) -> CGFloat {
+        return sqrt(pow(point1.x - point2.x,2) + pow(point1.y - point2.y,2))
+    }
 }

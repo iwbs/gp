@@ -7,12 +7,8 @@
 //
 
 import SpriteKit
-//import GameplayKit
 
 class GameScene: SKScene {
-    
-//    private var label : SKLabelNode?
-//    private var spinnyNode : SKShapeNode?
     
     var scoreLabel:SKLabelNode!
     var score:Int = 0 {
@@ -20,6 +16,7 @@ class GameScene: SKScene {
             scoreLabel.text = "Score: \(score)"
         }
     }
+    var tmpScore:Int = 0
     
     private var gameTimer:Timer!
     
@@ -31,39 +28,19 @@ class GameScene: SKScene {
         //            label.alpha = 0.0
         //            label.run(SKAction.fadeIn(withDuration: 2.0))
         //        }
-        
-        // Create shape node to use during mouse interaction
-        //        let w = (self.size.width + self.size.height) * 0.05
-        //        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        //
-        //        if let spinnyNode = self.spinnyNode {
-        //            spinnyNode.lineWidth = 2.5
-        //
-        //
-        //
-        //            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-        //            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-        //                                              SKAction.fadeOut(withDuration: 0.5),
-        //                                              SKAction.removeFromParent()]))
-        //        }
-        
 
+        SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
+        
         scoreLabel = SKLabelNode(text: "Score: 0")
         scoreLabel.position = CGPoint(x: 0, y: 150)
-        scoreLabel.fontName = "HelveticaNeue-Bold"
+        scoreLabel.fontName = "DINCondensed-Bold"
         scoreLabel.fontSize = 36
         scoreLabel.fontColor = UIColor.white
-        score = 0
-        
-//        self.scaleMode = SKSceneScaleMode.resizeFill
         self.addChild(scoreLabel)
         
+        
         gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
-        
-        
-        //        addCircle(position: CGPoint(x: 0, y: 0), type: Circle.red)
         Util.addBezier(scene: self, position: CGPoint(x:0, y:0))
-        
     }
 
     
@@ -73,6 +50,10 @@ class GameScene: SKScene {
     
     func addScore(_ score: Int) {
         self.score += score
+    }
+    
+    func playHitSound() {
+        self.run(SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -93,13 +74,19 @@ class GameScene: SKScene {
                         let diff = circle.calculateAccumulatedFrame().width - nodeDict[uuid]!
                         if type == "stroke" {
                             if diff < 10 {
-                                Util.addScore(scene: self, position: circle.position, score: "300")
+                                Util.addScoreNode(scene: self, position: circle.position, score: "300")
+                                addScore(300)
+                                playHitSound()
                             } else if diff < 30 {
-                                Util.addScore(scene: self, position: circle.position, score: "100")
+                                Util.addScoreNode(scene: self, position: circle.position, score: "100")
+                                addScore(100)
+                                playHitSound()
                             } else if diff < 50 {
-                                Util.addScore(scene: self, position: circle.position, score: "50")
+                                Util.addScoreNode(scene: self, position: circle.position, score: "50")
+                                addScore(50)
+                                playHitSound()
                             } else {
-                                Util.addScore(scene: self, position: circle.position, score: "Miss")
+                                Util.addScoreNode(scene: self, position: circle.position, score: "Miss")
                             }
                             for c in self.children {
                                 if let nodeName = c.name, nodeName.hasSuffix(uuid) {
@@ -107,13 +94,14 @@ class GameScene: SKScene {
                                 }
                             }
                         }
+                        
                         if type == "startStroke" {
                             if diff < 10 {
-                                Util.addScore(scene: self, position: circle.position, score: "300")
+                                tmpScore = 300;
                             } else if diff < 30 {
-                                Util.addScore(scene: self, position: circle.position, score: "100")
+                                tmpScore = 100;
                             } else if diff < 50 {
-                                Util.addScore(scene: self, position: circle.position, score: "50")
+                                tmpScore = 50;
                             }
                         }
                     } else {
@@ -130,12 +118,38 @@ class GameScene: SKScene {
         for t in touches {
             let loc = t.location(in: self)
             let nodesArray = self.nodes(at: loc)
+            var movePosition:CGPoint = CGPoint(x:0, y:0)
             for node in nodesArray {
                 if let circle = node as? SKShapeNode {
                     if let nodeName = circle.name {
                         let name = nodeName.components(separatedBy: "|")
-                        if name[0] == "move" {
+                        let type = name[0]
+                        // let uuid = name[1]
+                        if type == "move" {
+                            movePosition = circle.position
                             addScore(5)
+                        }
+                        
+                        if type == "end" {
+                            let diff = Util.getDistance(point1: movePosition, point2: circle.position)
+                            if diff <= 3 {
+                                print(diff)
+                                print(tmpScore)
+                                if tmpScore == 300 {
+                                    Util.addScoreNode(scene: self, position: circle.position, score: "300")
+                                    addScore(300)
+                                    playHitSound()
+                                } else if tmpScore == 100 {
+                                    Util.addScoreNode(scene: self, position: circle.position, score: "100")
+                                    addScore(100)
+                                    playHitSound()
+                                } else if tmpScore == 50 {
+                                    Util.addScoreNode(scene: self, position: circle.position, score: "50")
+                                    addScore(50)
+                                    playHitSound()
+                                }
+                                tmpScore = 0
+                            }
                         }
                     }
                 }
