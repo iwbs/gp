@@ -6,6 +6,6 @@
 //  Copyright © 2020 comp7506. All rights reserved.
 //
 
-enum Circle: CaseIterable {
-    case red, green, yellow
+enum KType: CaseIterable {
+    case CIRCLE_RED, CIRCLE_GREEN, CIRCLE_YELLOW, LINE_LEFT, LINE_RIGHT
 }

@@ -10,6 +10,8 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    var musicNode:SKAudioNode!
+    var pauseLabel:SKLabelNode!
     var scoreLabel:SKLabelNode!
     var score:Int = 0 {
         didSet {
@@ -18,7 +20,10 @@ class GameScene: SKScene {
     }
     var tmpScore:Int = 0
     
+    var timeUntilFire = TimeInterval()
     private var gameTimer:Timer!
+    
+    var keyTimer = [Timer]()
     
     override func didMove(to view: SKView) {
         
@@ -31,6 +36,20 @@ class GameScene: SKScene {
 
         SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
         
+        let musicNode = SKAudioNode(fileNamed: "music.mp3")
+        self.musicNode = musicNode
+        addChild(self.musicNode)
+        
+//        self.run(SKAction.playSoundFileNamed("music.mp3", waitForCompletion: false))
+        
+        pauseLabel = SKLabelNode(text: "Pause")
+        pauseLabel.name = "pause"
+        pauseLabel.position = CGPoint(x: 300, y: 150)
+        pauseLabel.fontName = "DINCondensed-Bold"
+        pauseLabel.fontSize = 36
+        pauseLabel.fontColor = UIColor.white
+        self.addChild(pauseLabel)
+        
         scoreLabel = SKLabelNode(text: "Score: 0")
         scoreLabel.position = CGPoint(x: 0, y: 150)
         scoreLabel.fontName = "DINCondensed-Bold"
@@ -38,14 +57,33 @@ class GameScene: SKScene {
         scoreLabel.fontColor = UIColor.white
         self.addChild(scoreLabel)
         
+        let keys = Util.createSong()
+        for k in keys {
+            Timer.scheduledTimer(timeInterval: k.time, target: self, selector: #selector(addKey(sender:)), userInfo: k, repeats: false)
+        }
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
-        Util.addBezier(scene: self, position: CGPoint(x:0, y:0))
+//        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
+//        gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
+//        Util.addBezier(scene: self, position: CGPoint(x:50, y:50), type: KType.LINE_LEFT)
+//        Util.addBezier(scene: self, position: CGPoint(x:-150, y:50), type: KType.LINE_LEFT)
     }
 
     
     @objc func addRandomCircle() {
-        Util.addCircle(scene: self, position: CGPoint(x: Int.random(in: -250...250), y: Int.random(in: -150...150)), type: Circle.allCases.randomElement()!)
+//        Util.addCircle(scene: self, position: CGPoint(x: Int.random(in: -250...250), y: Int.random(in: -150...150)), type: Circle.allCases.randomElement()!)
+        Util.addCircle(scene: self, position: CGPoint(x: Int.random(in: -250...250), y: Int.random(in: -150...150)), type: KType.CIRCLE_RED)
+    }
+    
+    @objc func addKey(sender: Timer) {
+        let key:Key = sender.userInfo as! Key
+        switch (key.type) {
+            case .CIRCLE_RED, .CIRCLE_YELLOW, .CIRCLE_GREEN:
+                Util.addCircle(scene: self, position: key.position, type: key.type)
+            case .LINE_LEFT, .LINE_RIGHT:
+                Util.addBezier(scene: self, position: key.position, type: key.type)
+            default:
+                print("default")
+        }
     }
     
     func addScore(_ score: Int) {
@@ -110,6 +148,18 @@ class GameScene: SKScene {
                         }
                     }
                 }
+                else if let label = node as? SKLabelNode, let nodeName = label.name {
+                    if nodeName == "pause" {
+                        if self.view!.isPaused {
+                            self.view!.isPaused = false
+//                            gameTimer = Timer.scheduledTimer(timeInterval: timeUntilFire, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: false)
+                        } else {
+                            self.view!.isPaused = true
+//                            timeUntilFire = gameTimer.fireDate.timeIntervalSinceNow
+//                            gameTimer.invalidate()
+                        }
+                    }
+                }
             }
         }
     }
@@ -124,7 +174,7 @@ class GameScene: SKScene {
                     if let nodeName = circle.name {
                         let name = nodeName.components(separatedBy: "|")
                         let type = name[0]
-                        // let uuid = name[1]
+                        let uuid = name[1]
                         if type == "move" {
                             movePosition = circle.position
                             addScore(5)
@@ -132,9 +182,7 @@ class GameScene: SKScene {
                         
                         if type == "end" {
                             let diff = Util.getDistance(point1: movePosition, point2: circle.position)
-                            if diff <= 3 {
-                                print(diff)
-                                print(tmpScore)
+                            if diff <= 10 {
                                 if tmpScore == 300 {
                                     Util.addScoreNode(scene: self, position: circle.position, score: "300")
                                     addScore(300)
@@ -147,6 +195,11 @@ class GameScene: SKScene {
                                     Util.addScoreNode(scene: self, position: circle.position, score: "50")
                                     addScore(50)
                                     playHitSound()
+                                }
+                                for c in self.children {
+                                    if let nodeName = c.name, nodeName.hasSuffix(uuid) {
+                                        c.removeFromParent()
+                                    }
                                 }
                                 tmpScore = 0
                             }
