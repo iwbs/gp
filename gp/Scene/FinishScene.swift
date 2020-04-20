@@ -20,14 +20,16 @@ class FinishScene: SKScene {
         backBtn = self.childNode(withName: "back") as? SKLabelNode
         
         // update ranking
-        let defaults = UserDefaults.standard
-        var ranking = defaults.array(forKey: "ranking") as? [Int] ?? [Int]()
-        ranking.append(score)
-        ranking = Array(ranking.sorted().reversed())
-        if ranking.count > 10 {
-            ranking.remove(at: 10)
+        if score > 0 {
+            let defaults = UserDefaults.standard
+            var ranking = defaults.array(forKey: "ranking") as? [Int] ?? [Int]()
+            ranking.append(score)
+            ranking = Array(ranking.sorted().reversed())
+            if ranking.count > 10 {
+                ranking.remove(at: 10)
+            }
+            defaults.set(ranking, forKey: "ranking")
         }
-        defaults.set(ranking, forKey: "ranking")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
