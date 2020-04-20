@@ -9,7 +9,7 @@
 import SpriteKit
 import AVFoundation
 
-class GameScene: SKScene {
+class GameScene: SKScene, AVAudioPlayerDelegate {
     
     var musicNode:SKAudioNode!
     var pauseLabel:SKLabelNode!
@@ -25,14 +25,6 @@ class GameScene: SKScene {
 
     
     override func didMove(to view: SKView) {
-        
-        // Get label node from scene and store it for use later
-        //        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        //        if let label = self.label {
-        //            label.alpha = 0.0
-        //            label.run(SKAction.fadeIn(withDuration: 2.0))
-        //        }
-
         SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
         
         let url = Bundle.main.url(forResource: "music", withExtension: "mp3")
@@ -40,6 +32,7 @@ class GameScene: SKScene {
             audioPlayer = try AVAudioPlayer(contentsOf: url!)
             audioPlayer.prepareToPlay()
             audioPlayer.play()
+            audioPlayer.delegate = self
         } catch {
             print("Error:", error.localizedDescription)
         }
@@ -83,10 +76,17 @@ class GameScene: SKScene {
         self.run(SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false))
     }
     
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        audioPlayer.stop()
+        let transition = SKTransition.fade(withDuration: 1)
+        let finishScene = FinishScene(fileNamed: "FinishScene")
+        finishScene!.size = self.size
+        finishScene!.anchorPoint = CGPoint(x:0.5, y:0.5)
+        finishScene!.score = score
+        self.view?.presentScene(finishScene!, transition: transition)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //        if let label = self.label {
-        //            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        //        }
         var nodeDict = [String: CGFloat]()
         for t in touches {
             let loc = t.location(in: self)
@@ -185,6 +185,8 @@ class GameScene: SKScene {
                                     NodeUtil.addScoreNode(scene: self, position: circle.position, score: "50")
                                     addScore(50)
                                     playHitSound()
+                                } else {
+                                    NodeUtil.addScoreNode(scene: self, position: circle.position, score: "Miss")
                                 }
                                 for c in self.children {
                                     if let nodeName = c.name, nodeName.hasSuffix(uuid) {

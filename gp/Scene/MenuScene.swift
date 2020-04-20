@@ -14,21 +14,27 @@ class MenuScene: SKScene {
     var rankingBtn:SKLabelNode!
     
     override func didMove(to view: SKView) {
-        
         newGameBtn = self.childNode(withName: "newGame") as? SKLabelNode
         rankingBtn = self.childNode(withName: "ranking") as? SKLabelNode
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             let loc = t.location(in: self)
             let nodesArray = self.nodes(at: loc)
-            if nodesArray.first?.name == "newGame" {
+            let nodeName = nodesArray.first?.name
+            if nodeName == "newGame" {
                 let transition = SKTransition.fade(withDuration: 1)
-                let gameScene = GameScene(size: self.size)
-                gameScene.anchorPoint = CGPoint(x:0.5, y:0.5)
-                self.view?.presentScene(gameScene, transition: transition)
+                let gameScene = GameScene(fileNamed: "GameScene")
+                gameScene!.size = self.size
+                gameScene!.anchorPoint = CGPoint(x:0.5, y:0.5)
+                self.view?.presentScene(gameScene!, transition: transition)
+            } else if nodeName == "ranking" {
+                let transition = SKTransition.fade(withDuration: 1)
+                let rankingScene = RankingScene(fileNamed: "RankingScene")
+                rankingScene!.size = self.size
+                rankingScene!.anchorPoint = CGPoint(x:0.5, y:0.5)
+                self.view?.presentScene(rankingScene!, transition: transition)
             }
         }
     }
