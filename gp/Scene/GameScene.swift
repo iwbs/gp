@@ -31,7 +31,6 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url!)
             audioPlayer.prepareToPlay()
-            audioPlayer.play()
             audioPlayer.delegate = self
         } catch {
             print("Error:", error.localizedDescription)
@@ -66,6 +65,8 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
             }
             self.run(SKAction.sequence([SKAction.wait(forDuration: k.time), addNodeAction]))
         }
+        
+        audioPlayer.play()
     }
     
     func addScore(_ score: Int) {
@@ -200,9 +201,5 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
                 }
             }
         }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
     }
 }

@@ -45,35 +45,35 @@ class SongUtil {
         keys.append(Key(time: 36.4, position: CGPoint(x:0, y:-70), type:KType.LINE_RIGHT))
         
         
-        keys.append(Key(time: 39.5, position: CGPoint(x:0, y:70), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 39, position: CGPoint(x:0, y:70), type:KType.CIRCLE_YELLOW))
         
-        keys.append(Key(time: 40.4, position: CGPoint(x:-150, y:10), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 40.8, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 41.2, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 40.3, position: CGPoint(x:-150, y:10), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 40.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 40.9, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
         
-        keys.append(Key(time: 42.4, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 42.8, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 43.2, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 42.3, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 42.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 42.9, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
         
-        keys.append(Key(time: 44.4, position: CGPoint(x:-150, y:10), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 44.8, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 45.2, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 44.3, position: CGPoint(x:-150, y:10), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 44.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 44.9, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
         
         keys.append(Key(time: 46.3, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 46.7, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 47.1, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 46.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 46.9, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
         
         keys.append(Key(time: 48.3, position: CGPoint(x:-150, y:10), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 48.7, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 49.1, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 48.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 48.9, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
         
-        keys.append(Key(time: 50.2, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 50.3, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
         keys.append(Key(time: 50.6, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
-        keys.append(Key(time: 51, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
+        keys.append(Key(time: 50.9, position: CGPoint(x:-150, y:-110), type:KType.CIRCLE_RED))
         
         keys.append(Key(time: 54.85, position: CGPoint(x:-170, y:0), type:KType.CIRCLE_YELLOW))
-        keys.append(Key(time: 55.35, position: CGPoint(x:0, y:0), type:KType.CIRCLE_YELLOW))
-        keys.append(Key(time: 55.85, position: CGPoint(x:170, y:0), type:KType.CIRCLE_YELLOW))
+        keys.append(Key(time: 55.25, position: CGPoint(x:0, y:0), type:KType.CIRCLE_YELLOW))
+        keys.append(Key(time: 55.65, position: CGPoint(x:170, y:0), type:KType.CIRCLE_YELLOW))
         
         keys.append(Key(time: 59, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
         keys.append(Key(time: 59.3, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
@@ -84,8 +84,8 @@ class SongUtil {
         keys.append(Key(time: 61, position: CGPoint(x:150, y:-110), type:KType.CIRCLE_RED))
         
         keys.append(Key(time: 62.7, position: CGPoint(x:-170, y:0), type:KType.CIRCLE_YELLOW))
-        keys.append(Key(time: 63.2, position: CGPoint(x:0, y:0), type:KType.CIRCLE_YELLOW))
-        keys.append(Key(time: 63.7, position: CGPoint(x:170, y:0), type:KType.CIRCLE_YELLOW))
+        keys.append(Key(time: 63.1, position: CGPoint(x:0, y:0), type:KType.CIRCLE_YELLOW))
+        keys.append(Key(time: 63.5, position: CGPoint(x:170, y:0), type:KType.CIRCLE_YELLOW))
         
         keys.append(Key(time: 66.8, position: CGPoint(x:150, y:10), type:KType.CIRCLE_RED))
         keys.append(Key(time: 67.1, position: CGPoint(x:0, y:-50), type:KType.CIRCLE_RED))
