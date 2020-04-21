@@ -197,6 +197,19 @@ class NodeUtil {
         scene.addChild(move)
     }
     
+    class func addFadingCircle(scene: SKScene) {
+        let fill:SKShapeNode = SKShapeNode.init(circleOfRadius: CGFloat(5))
+        fill.position = CGPoint(x: Int.random(in: -300...300), y: Int.random(in: -150...150))
+        fill.lineWidth = 0
+        fill.fillColor = SKColor(red:CGFloat(Double.random(in: 0...1)), green:CGFloat(Double.random(in: 0...1)), blue:CGFloat(Double.random(in: 0...1)), alpha: 0.1)
+        let scale1Action = SKAction.scale(by: CGFloat(Int.random(in: 5...15)), duration: 1.5)
+        let fadeInAction = SKAction.fadeAlpha(to: 3, duration: 1.5)
+        let scale2Action = SKAction.scale(by: CGFloat(2), duration: 1.5)
+        let fadeOutAction = SKAction.fadeAlpha(to: 0, duration: 1.5)
+        fill.run(SKAction.sequence([SKAction.group([scale1Action, fadeInAction]), SKAction.group([scale2Action, fadeOutAction]), SKAction.removeFromParent()]))
+        scene.addChild(fill)
+    }
+    
     class func getDistance(point1:CGPoint, point2:CGPoint) -> CGFloat {
         return sqrt(pow(point1.x - point2.x,2) + pow(point1.y - point2.y,2))
     }

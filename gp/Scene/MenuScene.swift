@@ -19,6 +19,12 @@ class MenuScene: SKScene {
         // preload sound
         SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
         SKAction.playSoundFileNamed("music.mp3", waitForCompletion: false)
+        
+        Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
+    }
+    
+    @objc func addRandomCircle() {
+        NodeUtil.addFadingCircle(scene: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

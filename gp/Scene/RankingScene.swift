@@ -22,6 +22,12 @@ class RankingScene: SKScene {
         for (idx, r) in ranking.enumerated() {
             scoreBtn[idx].text = "\(idx+1). \(r)"
         }
+        
+        Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(addRandomCircle), userInfo: nil, repeats: true)
+    }
+    
+    @objc func addRandomCircle() {
+        NodeUtil.addFadingCircle(scene: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
