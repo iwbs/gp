@@ -13,7 +13,11 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
     
     var musicNode:SKAudioNode!
     var pauseLabel:SKLabelNode!
+    var restartNode:SKLabelNode!
+    var quitNode:SKLabelNode!
     var scoreLabel:SKLabelNode!
+    var maskNode:SKShapeNode!
+    
     var score:Int = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
@@ -25,8 +29,6 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
 
     
     override func didMove(to view: SKView) {
-        SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
-        
         let url = Bundle.main.url(forResource: "music", withExtension: "mp3")
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url!)
@@ -42,7 +44,31 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
         pauseLabel.fontName = "DINCondensed-Bold"
         pauseLabel.fontSize = 36
         pauseLabel.fontColor = UIColor.white
+        pauseLabel.zPosition = 6
+        pauseLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.right
         self.addChild(pauseLabel)
+        
+        restartNode = SKLabelNode(text: "Restart")
+        restartNode.name = "restart"
+        restartNode.position = CGPoint(x: 300, y: 100)
+        restartNode.fontName = "DINCondensed-Bold"
+        restartNode.fontSize = 36
+        restartNode.fontColor = UIColor.white
+        restartNode.zPosition = 6
+        restartNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.right
+        restartNode.isHidden = true
+        self.addChild(restartNode)
+        
+        quitNode = SKLabelNode(text: "Quit")
+        quitNode.name = "quit"
+        quitNode.position = CGPoint(x: 300, y: 50)
+        quitNode.fontName = "DINCondensed-Bold"
+        quitNode.fontSize = 36
+        quitNode.fontColor = UIColor.white
+        quitNode.zPosition = 6
+        quitNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.right
+        quitNode.isHidden = true
+        self.addChild(quitNode)
         
         scoreLabel = SKLabelNode(text: "Score: 0")
         scoreLabel.position = CGPoint(x: 0, y: 150)
@@ -50,6 +76,15 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
         scoreLabel.fontSize = 36
         scoreLabel.fontColor = UIColor.white
         self.addChild(scoreLabel)
+        
+        maskNode = SKShapeNode.init(rect: CGRect(x: 0, y:0, width: self.size.width, height: self.size.height))
+        maskNode.name = "mask|mask"
+        maskNode.position = CGPoint(x: -self.size.width/2, y:-self.size.height/2)
+        maskNode.lineWidth = 0
+        maskNode.fillColor = SKColor(red:0, green:0, blue:0, alpha: 0.5)
+        maskNode.zPosition = 5
+        maskNode.isHidden = true
+        self.addChild(maskNode)
         
         currentSong = SongUtil.createSong()
         for k in currentSong {
@@ -94,95 +129,23 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
             let nodesArray = self.nodes(at: loc)
             for node in nodesArray {
                 if let circle = node as? SKShapeNode, let nodeName = circle.name {
-                    let name = nodeName.components(separatedBy: "|")
-                    let type = name[0]
-                    let uuid = name[1]
-                    let isExist = nodeDict[uuid] != nil
-                    if isExist {
-                        let diff = circle.calculateAccumulatedFrame().width - nodeDict[uuid]!
-                        if type == "stroke" {
-                            if diff < 10 {
-                                NodeUtil.addScoreNode(scene: self, position: circle.position, score: "300")
-                                addScore(300)
-                                playHitSound()
-                            } else if diff < 30 {
-                                NodeUtil.addScoreNode(scene: self, position: circle.position, score: "100")
-                                addScore(100)
-                                playHitSound()
-                            } else if diff < 50 {
-                                NodeUtil.addScoreNode(scene: self, position: circle.position, score: "50")
-                                addScore(50)
-                                playHitSound()
-                            } else {
-                                NodeUtil.addScoreNode(scene: self, position: circle.position, score: "Miss")
-                            }
-                            for c in self.children {
-                                if let nodeName = c.name, nodeName.hasSuffix(uuid) {
-                                    c.removeFromParent()
-                                }
-                            }
-                        }
-                        
-                        if type == "startStroke" {
-                            if diff < 10 {
-                                tmpScore = 300;
-                            } else if diff < 30 {
-                                tmpScore = 100;
-                            } else if diff < 50 {
-                                tmpScore = 50;
-                            }
-                        }
-                    } else {
-                        if type == "fill" || type == "start" {
-                            nodeDict[uuid] = circle.calculateAccumulatedFrame().width
-                        }
-                    }
-                }
-                else if let label = node as? SKLabelNode, let nodeName = label.name {
-                    if nodeName == "pause" {
-                        if self.isPaused {
-                            // magic
-                            audioPlayer.currentTime -= 0.02
-                            audioPlayer.play()
-                            self.isPaused = false
-                        } else {
-                            audioPlayer.pause()
-                            self.isPaused = true
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            let loc = t.location(in: self)
-            let nodesArray = self.nodes(at: loc)
-            var movePosition:CGPoint = CGPoint(x:0, y:0)
-            for node in nodesArray {
-                if let circle = node as? SKShapeNode {
-                    if let nodeName = circle.name {
+                    if !self.isPaused {
                         let name = nodeName.components(separatedBy: "|")
                         let type = name[0]
                         let uuid = name[1]
-                        if type == "move" {
-                            movePosition = circle.position
-                            addScore(5)
-                        }
-                        
-                        if type == "end" {
-                            let diff = NodeUtil.getDistance(point1: movePosition, point2: circle.position)
-                            if diff <= 10 {
-                                if tmpScore == 300 {
+                        let isExist = nodeDict[uuid] != nil
+                        if isExist {
+                            let diff = circle.calculateAccumulatedFrame().width - nodeDict[uuid]!
+                            if type == "stroke" {
+                                if diff < 10 {
                                     NodeUtil.addScoreNode(scene: self, position: circle.position, score: "300")
                                     addScore(300)
                                     playHitSound()
-                                } else if tmpScore == 100 {
+                                } else if diff < 30 {
                                     NodeUtil.addScoreNode(scene: self, position: circle.position, score: "100")
                                     addScore(100)
                                     playHitSound()
-                                } else if tmpScore == 50 {
+                                } else if diff < 50 {
                                     NodeUtil.addScoreNode(scene: self, position: circle.position, score: "50")
                                     addScore(50)
                                     playHitSound()
@@ -194,7 +157,101 @@ class GameScene: SKScene, AVAudioPlayerDelegate {
                                         c.removeFromParent()
                                     }
                                 }
-                                tmpScore = 0
+                            }
+                            
+                            if type == "startStroke" {
+                                if diff < 10 {
+                                    tmpScore = 300;
+                                } else if diff < 30 {
+                                    tmpScore = 100;
+                                } else if diff < 50 {
+                                    tmpScore = 50;
+                                }
+                            }
+                        } else {
+                            if type == "fill" || type == "start" {
+                                nodeDict[uuid] = circle.calculateAccumulatedFrame().width
+                            }
+                        }
+                    }
+                }
+                else if let label = node as? SKLabelNode, let nodeName = label.name {
+                    if nodeName == "pause" {
+                        if self.isPaused {
+                            // magic
+                            audioPlayer.currentTime -= 0.01
+                            audioPlayer.play()
+                            self.isPaused = false
+                            maskNode.isHidden = true
+                            restartNode.isHidden = true
+                            quitNode.isHidden = true
+                        } else {
+                            audioPlayer.pause()
+                            self.isPaused = true
+                            maskNode.isHidden = false
+                            restartNode.isHidden = false
+                            quitNode.isHidden = false
+                        }
+                    } else if nodeName == "restart" {
+                        let transition = SKTransition.fade(withDuration: 1)
+                        let gameScene = GameScene(fileNamed: "GameScene")
+                        gameScene!.size = self.size
+                        gameScene!.anchorPoint = CGPoint(x:0.5, y:0.5)
+                        self.view?.presentScene(gameScene!, transition: transition)
+                    } else if nodeName == "quit" {
+                        let transition = SKTransition.fade(withDuration: 1)
+                        let menuScene = MenuScene(fileNamed: "MenuScene")
+                        menuScene!.size = self.size
+                        menuScene!.anchorPoint = CGPoint(x:0.5, y:0.5)
+                        self.view?.presentScene(menuScene!, transition: transition)
+                    }
+                }
+            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if !self.isPaused {
+            for t in touches {
+                let loc = t.location(in: self)
+                let nodesArray = self.nodes(at: loc)
+                var movePosition:CGPoint = CGPoint(x:0, y:0)
+                for node in nodesArray {
+                    if let circle = node as? SKShapeNode {
+                        if let nodeName = circle.name {
+                            let name = nodeName.components(separatedBy: "|")
+                            let type = name[0]
+                            let uuid = name[1]
+                            if type == "move" {
+                                movePosition = circle.position
+                                addScore(5)
+                            }
+                            
+                            if type == "end" {
+                                let diff = NodeUtil.getDistance(point1: movePosition, point2: circle.position)
+                                if diff <= 10 {
+                                    if tmpScore == 300 {
+                                        NodeUtil.addScoreNode(scene: self, position: circle.position, score: "300")
+                                        addScore(300)
+                                        playHitSound()
+                                    } else if tmpScore == 100 {
+                                        NodeUtil.addScoreNode(scene: self, position: circle.position, score: "100")
+                                        addScore(100)
+                                        playHitSound()
+                                    } else if tmpScore == 50 {
+                                        NodeUtil.addScoreNode(scene: self, position: circle.position, score: "50")
+                                        addScore(50)
+                                        playHitSound()
+                                    } else {
+                                        NodeUtil.addScoreNode(scene: self, position: circle.position, score: "Miss")
+                                    }
+                                    for c in self.children {
+                                        if let nodeName = c.name, nodeName.hasSuffix(uuid) {
+                                            c.removeFromParent()
+                                        }
+                                    }
+                                    tmpScore = 0
+                                }
                             }
                         }
                     }

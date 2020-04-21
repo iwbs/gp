@@ -16,6 +16,9 @@ class MenuScene: SKScene {
     override func didMove(to view: SKView) {
         newGameBtn = self.childNode(withName: "newGame") as? SKLabelNode
         rankingBtn = self.childNode(withName: "ranking") as? SKLabelNode
+        // preload sound
+        SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false)
+        SKAction.playSoundFileNamed("music.mp3", waitForCompletion: false)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
